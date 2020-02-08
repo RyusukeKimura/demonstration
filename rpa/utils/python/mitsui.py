@@ -1,3 +1,5 @@
+import time
+
 # move to search result page from search page
 def move_to_search_result_page_from_search_page(driver, timeout):
     xpath = '//*[@id="active"]'
