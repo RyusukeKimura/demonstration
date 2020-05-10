@@ -1,18 +1,34 @@
+# import libraries
 import time
+from datetime import datetime
+
+# import selenium libraries
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+def wait_driver(driver, timeout, id):
+    try:
+        element = WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.ID, id)))
+    except:
+        print('retry')
+        element = WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.ID, id)))
+    time.sleep(1)
 
 # move to search result page from search page
 def move_to_search_result_page_from_search_page(driver, timeout):
+    wait_driver(driver, timeout, 'active')
     xpath = '//*[@id="active"]'
     driver.find_element_by_xpath(xpath).click()
-    time.sleep(timeout)
 
 # move to search page from top page
 def move_to_search_page_from_top_page(driver, timeout):
+    wait_driver(driver, timeout, 'main')
     xpath = '//*[@id="main"]/div[1]/div[1]/div[2]/div[1]/a'
     driver.find_element_by_xpath(xpath).click()
-    time.sleep(timeout)
 
-def extract_information(driver):
+def extract_information(driver, todofuken, shikuchoson, timeout):
     # extract information
     ## first block
     xpath = '//*[@id="container"]/section/div[1]/div/div/div[1]/table[1]/tbody/tr[1]/td'
@@ -94,7 +110,9 @@ def extract_information(driver):
     xpath = '//*[@id="container"]/section/div[1]/div/div/div[1]/table[2]/tbody/tr[13]/td'
     bikou = driver.find_element_by_xpath(xpath).text
 
-    array = [bld_name, room_name, room_madori, bld_address, access, num_rooms,
+    dt_now = datetime.now
+
+    array = [dt_now, todofuken, shikuchoson, bld_name, room_name, room_madori, bld_address, access, num_rooms,
                     chinryo, kanrihi, sikikin, reikin, kibo_kozo, menseki_tsubo, syunko_nengappi, keiyaku_kikan, kousinryo,
                    torihiki_taiyo, parking, hoken, kanri_gaisya, kagi_koukan, kouza_furikae, hosyo_gaisya, setsubi, bikou]
 
